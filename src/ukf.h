@@ -14,7 +14,7 @@ class UKF {
 public:
 
   ///* initially set to false, set to true in first call of ProcessMeasurement
-  bool is_initialized_;
+  bool is_initialized;
 
   ///* if this is false, laser measurements will be ignored (except for init)
   bool use_laser_;
@@ -32,7 +32,7 @@ public:
   MatrixXd Xsig_pred_;
 
   ///* time when the state is true, in us
-  long long time_us_;
+  long long previous_timestamp_;
 
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
@@ -82,6 +82,11 @@ public:
   virtual ~UKF();
 
   /**
+   * Normalize angle between [-pi, pi]
+   */
+  void NormalizeAngle(double *angle);
+
+  /**
    * ProcessMeasurement
    * @param meas_package The latest measurement data of either radar or laser
    */
@@ -105,6 +110,11 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+  /**
+   * Universal Update function
+   */
+  void UpdateUKF(MeasurementPackage meas_package, MatrixXd Zsig, int n_z);
 };
 
 #endif /* UKF_H */
